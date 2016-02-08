@@ -1,5 +1,5 @@
 var gzippo = require('gzippo')
-var express = rquire('express')
+var express = require('express')
 var morgan = require('morgan')
 var app = express();
 
