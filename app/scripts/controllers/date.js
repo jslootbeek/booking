@@ -12,11 +12,12 @@ angular.module('bookingApp')
 
     $scope.breakStart = new Date(1970, 0, 1, 12, 0, 0);
     $scope.breakEnd = new Date(1970, 0, 1, 13, 0, 0);
+
     $scope.newDate = {
       startTime: new Date(1970, 0, 1, 8, 0, 0),
       endTime: new Date(1970, 0, 1, 17, 0, 0)
     };
-    // synchronize a read-only, synchronized array of companies, limit to most recent 10
+
     $scope.dates = $firebaseArray(Ref.child('dates'));
     $scope.trucks = $firebaseArray(Ref.child('trucks'));
 
@@ -31,9 +32,11 @@ angular.module('bookingApp')
       if (newDate) {
         newDate.company = $scope.company.$id;
         newDate.slots = {};
-        newDate.startDate = newDate.date.getTime() + newDate.startTime.getTime();
-        newDate.endDate = newDate.date.getTime() + newDate.endTime.getTime();
+        newDate.startDate = new Date(newDate.date.getFullYear(), newDate.date.getMonth(), newDate.date.getDate(), newDate.startTime.getHours(), newDate.startTime.getMinutes()).getTime();
+        newDate.endDate = new Date(newDate.date.getFullYear(), newDate.date.getMonth(), newDate.date.getDate(), newDate.endTime.getHours(), newDate.endTime.getMinutes()).getTime();
 
+        var breakStartTime = new Date(newDate.date.getFullYear(), newDate.date.getMonth(), newDate.date.getDate(), $scope.breakStart.getHours(), $scope.breakStart.getMinutes()).getTime();
+        var breakEndTime = new Date(newDate.date.getFullYear(), newDate.date.getMonth(), newDate.date.getDate(), $scope.breakEnd.getHours(), $scope.breakEnd.getMinutes()).getTime();
         // generate slots
         var tenMinutes = 1000 * 60 * 10;
         var count = 0;
@@ -44,7 +47,7 @@ angular.module('bookingApp')
 //           console.log(start, newDate.date.getTime() + $scope.breakStart.getTime(), start < newDate.date.getTime() + $scope.breakStart.getTime());
 //           console.log(start, newDate.date.getTime() + $scope.breakEnd.getTime(), start >= newDate.date.getTime() + $scope.breakEnd.getTime());
 //           console.log(count, (count + 1) % 6, (count + 1) % 6 != 0);
-          if ((start < newDate.date.getTime() + $scope.breakStart.getTime() || start >= newDate.date.getTime() + $scope.breakEnd.getTime()) &&  ++count % 6 !== 0) {
+          if ((start < breakStartTime || start >= breakEndTime) &&  ++count % 6 !== 0) {
 //             console.log("creating slot " + count);
             newDate.slots[start + '-' + end] = {count: 0, appointments: []};
           }
@@ -54,7 +57,7 @@ angular.module('bookingApp')
         newDate.date = newDate.date.getTime();
         // push a message to the end of the array
         $scope.dates.$add(newDate).then(function(data){
-          $scope.msg = "Date added."
+          $scope.msg = 'Date added.';
         })
           // display any errors
           .catch(alert);

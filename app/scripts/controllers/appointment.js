@@ -8,14 +8,24 @@
  * Controller of the bookingApp
  */
 angular.module('bookingApp')
-  .controller('AppointmentCtrl', function ($scope, Ref, $firebaseObject, $firebaseArray, $timeout, states) {
+  .controller('AppointmentCtrl', function ($scope, $routeParams, Ref, $firebaseObject, $firebaseArray, $timeout, states) {
+    $scope.newAppointment = [];
     $scope.states = states.all();
 
     $scope.reasons = $firebaseArray(Ref.child('reasons'));
     $scope.reasons.$loaded().catch(alert);
 
     $scope.companies = $firebaseArray(Ref.child('clients'));
-    $scope.companies.$loaded().catch(alert);
+    $scope.companies.$loaded().then(function(data) {
+      if ($routeParams.companyName === undefined) return;
+      data.forEach(function(current, index, array) {
+        if (current.$id === $routeParams.companyName) {
+          $scope.newAppointment.company = current;
+          $scope.getDates();
+          $scope.companyDisabled = true;
+        }
+      });
+    }).catch(alert);
 
     $scope.patientData = {
       reasons: []

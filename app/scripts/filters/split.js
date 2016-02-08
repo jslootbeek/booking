@@ -16,22 +16,18 @@ angular.module('bookingApp')
       var end = new Date(parseInt(splits[1]));
 
       var startHours = start.getHours();
-      var startString = "";
+      var ampm = startHours < 12 ? "AM" : "PM";
       if (startHours > 12) {
         startHours -= 12;
-        startString = startHours + ":" + ("00" + start.getMinutes()).slice(-2) + " PM";
-      } else {
-        startString = startHours + ("00" + start.getMinutes()).slice(-2) + " AM";
       }
+      var startString = startHours + ":" + ("00" + start.getMinutes()).slice(-2) + " " + ampm;
 
       var endHours = end.getHours();
-      var endString = "";
+      var ampm = endHours < 12 ? "AM" : "PM";
       if (endHours > 12) {
         endHours -= 12;
-        endString = endHours + ":" + ("00" + end.getMinutes()).slice(-2) + " PM";
-      } else {
-        endString = endHours + ("00" + end.getMinutes()).slice(-2) + " AM";
       }
+      var endString = endHours + ":" + ("00" + end.getMinutes()).slice(-2) + " " + ampm;
       return startString + " - " + endString;
     };
   });

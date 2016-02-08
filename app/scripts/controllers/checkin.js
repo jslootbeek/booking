@@ -8,13 +8,22 @@
  * Controller of the bookingApp
  */
 angular.module('bookingApp')
-  .controller('CheckinCtrl', function ($scope, Ref, $firebaseArray, $filter, $timeout) {
+  .controller('CheckinCtrl', function ($scope, Ref, $routeParams, $firebaseArray, $filter, $timeout) {
     $scope.companies = $firebaseArray(Ref.child('clients'));
-    $scope.companies.$loaded().catch(alert);
+    $scope.companies.$loaded().then(function(data) {
+      if ($routeParams.companyName === undefined) return;
+      data.forEach(function(current, index, array) {
+        if (current.$id === $routeParams.companyName) {
+          $scope.getDate(current);
+          $scope.companyDisabled = true;
+        }
+      });
+    }).catch(alert);
 
-    $scope.getDate = function () {
+    $scope.getDate = function (company) {
       var today = new Date();
-      $scope.dates = $firebaseArray(Ref.child('dates').orderByChild('company').equalTo($scope.selectedCompany.$id));
+      $scope.dates = $firebaseArray(Ref.child('dates').orderByChild('company').equalTo(company.$id));
+      $scope.selectedCompany = company;
       $scope.dates.$loaded(function (date) {
         date.forEach(function (current, index, array) {
           if (current.date === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) {

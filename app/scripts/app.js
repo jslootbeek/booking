@@ -22,16 +22,16 @@ bookingApp.config(function ($routeProvider) {
       templateUrl: 'views/main.html',
       controller: 'MainCtrl'
     })
-    .when('/company', {
+    .when('/company/:companyName?', {
       templateUrl: 'views/company.html',
       controller: 'CompanyCtrl'
     })
-    .when('/appointment', {
+    .when('/appointment/:companyName?', {
       templateUrl: 'views/appointment.html',
       controller: 'AppointmentCtrl',
       controllerAs: 'appointment'
     })
-    .when('/checkin', {
+    .when('/checkin/:companyName?', {
       templateUrl: 'views/checkin.html',
       controller: 'CheckinCtrl'
     });
