@@ -17,7 +17,9 @@ angular.module('bookingApp')
       $scope.dates = $firebaseArray(Ref.child('dates').orderByChild('company').equalTo($scope.selectedCompany.$id));
       $scope.dates.$loaded(function (date) {
         date.forEach(function (current, index, array) {
-          if (current.date === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) { $scope.date = current; }
+          if (current.date === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) {
+            $scope.date = current;
+          }
         });
       }).catch(alert);
     };
@@ -27,20 +29,22 @@ angular.module('bookingApp')
       $scope.slot = null;
       $scope.slotTime = null;
       for (var key in $scope.date.slots) {
-        if (!key)  { continue; }
+        if (!key) {
+          continue;
+        }
         var slot = $scope.date.slots[key];
-        if (!slot.appointments || slot.appointments.length === 0) { continue; }
-        slot.appointments.forEach(function (current) {
-          if (current.email === $scope.email) {
-            $scope.appointment = current;
-            $scope.slotTime = key;
-            return;
-          }
-        });
+        if (!slot.appointments || slot.appointments.length === 0) {
+          continue;
+        }
+        if (slot.appointments[0].email === $scope.email) {
+          $scope.appointment = slot.appointments[0];
+          $scope.slotTime = key;
+          return;
+        }
       }
     };
 
-    $scope.checkin = function() {
+    $scope.checkin = function () {
       $scope.appointment.checkedInTime = new Date().getTime();
       $scope.dates.$save($scope.date);
       $scope.email = null;

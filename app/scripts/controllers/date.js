@@ -13,9 +13,8 @@ angular.module('bookingApp')
     $scope.breakStart = new Date(1970, 0, 1, 12, 0, 0);
     $scope.breakEnd = new Date(1970, 0, 1, 13, 0, 0);
     $scope.newDate = {
-      date: new Date(2016, 1, 7),
-      startTime: new Date(1970, 0, 1, 11, 0, 0),
-      endTime: new Date(1970, 0, 1, 14, 0, 0)
+      startTime: new Date(1970, 0, 1, 8, 0, 0),
+      endTime: new Date(1970, 0, 1, 17, 0, 0)
     };
     // synchronize a read-only, synchronized array of companies, limit to most recent 10
     $scope.dates = $firebaseArray(Ref.child('dates'));
@@ -23,7 +22,9 @@ angular.module('bookingApp')
 
     // display any errors
     $scope.dates.$loaded().catch(alert);
-    $scope.trucks.$loaded().catch(alert);
+    $scope.trucks.$loaded().then(function() {
+      $scope.newDate.truck = $scope.trucks[0].$id;
+    }).catch(alert);
 
     // provide a method for adding a message
     $scope.addDate = function (newDate) {
@@ -52,7 +53,9 @@ angular.module('bookingApp')
         console.log(newDate);
         newDate.date = newDate.date.getTime();
         // push a message to the end of the array
-        $scope.dates.$add(newDate)
+        $scope.dates.$add(newDate).then(function(data){
+          $scope.msg = "Date added."
+        })
           // display any errors
           .catch(alert);
       }

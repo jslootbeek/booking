@@ -1,17 +1,11 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name bookingApp.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the bookingApp
+ * A demo of using AngularFire to manage a synchronized list.
  */
 angular.module('bookingApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+  .controller('MainCtrl', function () {
+});

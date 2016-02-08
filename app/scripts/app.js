@@ -19,8 +19,8 @@ var bookingApp = angular.module('bookingApp', [
 bookingApp.config(function ($routeProvider) {
   $routeProvider
     .when('/', {
-      templateUrl: 'views/chat.html',
-      controller: 'ChatCtrl'
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl'
     })
     .when('/company', {
       templateUrl: 'views/company.html',

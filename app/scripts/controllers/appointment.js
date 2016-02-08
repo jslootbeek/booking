@@ -18,26 +18,26 @@ angular.module('bookingApp')
     $scope.companies.$loaded().catch(alert);
 
     $scope.patientData = {
-      first: 'Steve',
-      last: 'Jobs',
-      phone: '6175551212',
-      email: 'steve@apple.com',
       reasons: []
     };
 
     $scope.getDates = function() {
       $scope.dates = $firebaseArray(Ref.child('dates').orderByChild('company').equalTo($scope.newAppointment.company.$id));
-      $scope.dates.$loaded().catch(alert);
+      $scope.dates.$loaded().then(function() {
+        $scope.newAppointment.date = $scope.dates[0];
+      }).catch(alert);
     };
 
     $scope.addAppointment = function(newAppointment) {
       if (newAppointment) {
         if (!newAppointment.date.slots[newAppointment.selectedSlot].appointments) {
-          newAppointment.date.slots[newAppointment.selectedSlot].appointments = []
+          newAppointment.date.slots[newAppointment.selectedSlot].appointments = [];
         }
         newAppointment.date.slots[newAppointment.selectedSlot].appointments.push($scope.patientData);
         newAppointment.date.slots[newAppointment.selectedSlot].count = newAppointment.date.slots[newAppointment.selectedSlot].appointments.length;
-        $scope.dates.$save(newAppointment.date);
+        $scope.dates.$save(newAppointment.date).then(function(data) {
+          $scope.msg = "Your appointment was made."
+        });
       }
     };
 
